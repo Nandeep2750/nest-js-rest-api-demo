@@ -1,21 +1,41 @@
-import { Injectable } from '@nestjs/common';
+import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { hash } from 'bcrypt';
 
 import { User, UserDocument } from './entities/user.entity';
+import { USER_CONFIG } from 'src/config/constants';
+import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModal: Model<UserDocument>) {}
 
-  register(createUserDto: CreateUserDto) {
-    console.log(
-      '🚀 ~ file: user.service.ts:14 ~ UserService ~ register ~ createUserDto:',
-      createUserDto,
+  @HttpCode(StatusCodes.CREATED)
+  async register(createUserDto: CreateUserDto) {
+    const user = await this.userModal.findOne({
+      email: createUserDto.email,
+    });
+
+    if (user) {
+      throw new HttpException(
+        'Email already exists please use another one.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    createUserDto.password = await hash(
+      createUserDto.password,
+      USER_CONFIG.SALT_ROUNDS,
     );
-    return 'This action register a new user';
+    const newUser = await new this.userModal(createUserDto).save();
+    return {
+      statusCode: StatusCodes.CREATED,
+      message: 'User registerd successfully',
+      data: newUser,
+    };
   }
 
   findAll() {

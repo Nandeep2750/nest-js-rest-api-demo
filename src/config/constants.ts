@@ -7,4 +7,10 @@ export const USER_CONFIG = Object.freeze({
     MALE: 'Male',
     FEMALE: 'Female',
   },
+  SALT_ROUNDS: 10,
+  STATUS_TYPE: {
+    ACTIVE: 'Active',
+    INACTIVE: 'Inactive',
+    PENDING: 'Pending',
+  },
 });

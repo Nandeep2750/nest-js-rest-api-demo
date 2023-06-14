@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { USER_CONFIG } from 'src/config/constants';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -11,7 +12,7 @@ export class User {
   @Prop({ required: true, type: String })
   lastName: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: true, type: String, unique: true })
   email: string;
 
   @Prop({ required: true, type: String })
@@ -20,13 +21,17 @@ export class User {
   @Prop({ required: true, type: String })
   password: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({
+    required: true,
+    default: USER_CONFIG.STATUS_TYPE.PENDING,
+    type: String,
+  })
   status: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String })
   refreshToken: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String })
   refreshTokenCreatedAt: Date;
 }
 
