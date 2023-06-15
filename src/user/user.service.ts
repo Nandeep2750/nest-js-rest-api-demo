@@ -1,13 +1,18 @@
-import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  HttpCode,
+  ConflictException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
+import { StatusCodes } from 'http-status-codes';
 
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { User, UserDocument } from './entities/user.entity';
 import { USER_CONFIG } from 'src/config/constants';
-import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class UserService {
@@ -20,9 +25,8 @@ export class UserService {
     });
 
     if (user) {
-      throw new HttpException(
+      throw new ConflictException(
         'Email already exists please use another one.',
-        HttpStatus.CONFLICT,
       );
     }
 
@@ -33,13 +37,39 @@ export class UserService {
     const newUser = await new this.userModal(createUserDto).save();
     return {
       statusCode: StatusCodes.CREATED,
-      message: 'User registerd successfully',
+      message: 'User registerd successfully.',
       data: newUser,
     };
   }
 
+  @HttpCode(StatusCodes.OK)
+  async login(loginUserDto: LoginUserDto) {
+    let user = await this.userModal
+      .findOne({
+        email: loginUserDto.email,
+      })
+      .select(['firstName', 'lastName', 'email', 'password', 'gender']);
+
+    user = user.toObject();
+
+    if (!user) {
+      throw new UnauthorizedException('Please check Credentials.');
+    }
+
+    const isPasswordValid = await compare(loginUserDto.password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Please check Credentials.');
+    }
+    delete user.password;
+    return {
+      statusCode: StatusCodes.OK,
+      message: 'User loggedin successfully.',
+      data: user,
+    };
+  }
+
   findAll() {
-    return `This action returns all user`;
+    return 'This action returns all user.';
   }
 
   findOne(id: number) {

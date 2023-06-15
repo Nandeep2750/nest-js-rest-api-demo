@@ -13,4 +13,5 @@ export const USER_CONFIG = Object.freeze({
     INACTIVE: 'Inactive',
     PENDING: 'Pending',
   },
+  JWT_KEY: 'auth.secret.user',
 });

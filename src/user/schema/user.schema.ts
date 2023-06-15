@@ -13,3 +13,11 @@ export const createUserSchema = Joi.object({
     .min(USER_CONFIG.PASSWORD.MIN)
     .max(USER_CONFIG.PASSWORD.MAX),
 });
+
+export const loginUserSchema = Joi.object({
+  email: Joi.string().required().email(),
+  password: Joi.string()
+    .required()
+    .min(USER_CONFIG.PASSWORD.MIN)
+    .max(USER_CONFIG.PASSWORD.MAX),
+});

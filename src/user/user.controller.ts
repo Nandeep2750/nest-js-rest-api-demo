@@ -9,8 +9,8 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { createUserSchema } from './schema/create-user.schema';
+import { CreateUserDto, LoginUserDto } from './dto/user.dto';
+import { createUserSchema, loginUserSchema } from './schema/user.schema';
 import { JoiValidationPipe } from 'src/pipes/joi-validation.pipe';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -22,6 +22,12 @@ export class UserController {
   @UsePipes(new JoiValidationPipe(createUserSchema))
   register(@Body() createUserDto: CreateUserDto) {
     return this.userService.register(createUserDto);
+  }
+
+  @Post('login')
+  @UsePipes(new JoiValidationPipe(loginUserSchema))
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.userService.login(loginUserDto);
   }
 
   // @Get()
