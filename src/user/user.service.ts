@@ -12,11 +12,15 @@ import { StatusCodes } from 'http-status-codes';
 
 import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import { User, UserDocument } from './entities/user.entity';
-import { USER_CONFIG } from 'src/config/constants';
+import { ACCOUNT_TYPE, USER_CONFIG } from 'src/config/constants';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModal: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModal: Model<UserDocument>,
+    private authService: AuthService,
+  ) {}
 
   @HttpCode(StatusCodes.CREATED)
   async register(createUserDto: CreateUserDto) {
@@ -44,11 +48,17 @@ export class UserService {
 
   @HttpCode(StatusCodes.OK)
   async login(loginUserDto: LoginUserDto) {
-    let user = await this.userModal
+    let user = (await this.userModal
       .findOne({
         email: loginUserDto.email,
       })
-      .select(['firstName', 'lastName', 'email', 'password', 'gender']);
+      .select([
+        'firstName',
+        'lastName',
+        'email',
+        'password',
+        'gender',
+      ])) as UserDocument & { token: string };
 
     user = user.toObject();
 
@@ -61,6 +71,13 @@ export class UserService {
       throw new UnauthorizedException('Please check Credentials.');
     }
     delete user.password;
+
+    user.token = await this.authService.generateToken({
+      _id: user._id,
+      email: user.email,
+      accountType: ACCOUNT_TYPE.USER,
+    });
+
     return {
       statusCode: StatusCodes.OK,
       message: 'User loggedin successfully.',

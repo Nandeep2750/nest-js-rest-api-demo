@@ -15,3 +15,8 @@ export const USER_CONFIG = Object.freeze({
   },
   JWT_KEY: 'auth.secret.user',
 });
+
+export const ACCOUNT_TYPE = Object.freeze({
+  USER: 'User',
+  ADMIN: 'Admin',
+});

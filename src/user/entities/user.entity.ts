@@ -4,7 +4,7 @@ import { USER_CONFIG } from 'src/config/constants';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
   @Prop({ required: true, type: String })
   firstName: string;
