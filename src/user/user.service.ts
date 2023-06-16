@@ -58,11 +58,10 @@ export class UserService {
         'gender',
       ])) as UserDocument & { token: string };
 
-    user = user.toObject();
-
     if (!user) {
       throw new ForbiddenException('Please check Credentials.');
     }
+    user = user.toObject();
 
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
