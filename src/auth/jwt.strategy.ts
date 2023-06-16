@@ -12,4 +12,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: USER_CONFIG.JWT_KEY,
     });
   }
+
+  validate(payload: Express.User) {
+    return payload;
+  }
 }

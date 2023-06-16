@@ -14,6 +14,7 @@ export const USER_CONFIG = Object.freeze({
     PENDING: 'Pending',
   },
   JWT_KEY: 'auth.secret.user',
+  TOKEN_EXPIRES_IN: '1h',
 });
 
 export const ACCOUNT_TYPE = Object.freeze({

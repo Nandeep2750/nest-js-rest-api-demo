@@ -1,12 +1,12 @@
 import {
-  HttpCode,
   ConflictException,
-  HttpStatus,
   Injectable,
-  UnauthorizedException,
+  ForbiddenException,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { hash, compare } from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
 
@@ -22,7 +22,6 @@ export class UserService {
     private authService: AuthService,
   ) {}
 
-  @HttpCode(StatusCodes.CREATED)
   async register(createUserDto: CreateUserDto) {
     const user = await this.userModal.findOne({
       email: createUserDto.email,
@@ -46,7 +45,6 @@ export class UserService {
     };
   }
 
-  @HttpCode(StatusCodes.OK)
   async login(loginUserDto: LoginUserDto) {
     let user = (await this.userModal
       .findOne({
@@ -63,12 +61,12 @@ export class UserService {
     user = user.toObject();
 
     if (!user) {
-      throw new UnauthorizedException('Please check Credentials.');
+      throw new ForbiddenException('Please check Credentials.');
     }
 
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Please check Credentials.');
+      throw new ForbiddenException('Please check Credentials.');
     }
     delete user.password;
 
@@ -93,8 +91,33 @@ export class UserService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(userId: string | Types.ObjectId, updateUserDto: UpdateUserDto) {
+    return this.userModal
+      .findByIdAndUpdate(
+        new Types.ObjectId(userId),
+        {
+          ...updateUserDto,
+        },
+        { new: true },
+      )
+      .select(['firstName', 'lastName', 'email', 'type', 'refreshToken'])
+      .exec()
+      .then((result) => {
+        if (result) {
+          return {
+            statusCode: StatusCodes.OK,
+            message: 'Profile updated successfully.',
+            data: result,
+          };
+        } else {
+          throw new NotFoundException('No user available for given user Id.');
+        }
+      })
+      .catch((err) => {
+        // eslint-disable-next-line prettier/prettier
+        console.log("🚀 ~ file: user.service.ts:119 ~ UserService ~ update ~ err:", err)
+        throw new InternalServerErrorException();
+      });
   }
 
   remove(id: number) {
