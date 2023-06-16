@@ -61,12 +61,12 @@ export class UserService {
     if (!user) {
       throw new ForbiddenException('Please check Credentials.');
     }
-    user = user.toObject();
 
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
       throw new ForbiddenException('Please check Credentials.');
     }
+    user = user.toObject();
     delete user.password;
 
     user.token = await this.authService.generateToken({
