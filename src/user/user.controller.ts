@@ -9,8 +9,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto/user.dto';
 import {
+  ChangePasswordDto,
+  CreateUserDto,
+  LoginUserDto,
+  UpdateUserDto,
+} from './dto/user.dto';
+import {
+  changePasswordSchema,
   createUserSchema,
   loginUserSchema,
   updateUserSchema,
@@ -56,7 +62,19 @@ export class UserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const userId = req.user._id;
-    return this.userService.update(userId, updateUserDto);
+    return this.userService.updateUserById(userId, updateUserDto);
+  }
+
+  @Patch('change-password')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('jwt'))
+  @UsePipes(new JoiValidationPipe(changePasswordSchema))
+  changePassword(
+    @Request() req: Express.Request,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    const userId = req.user._id;
+    return this.userService.changePassword(userId, changePasswordDto);
   }
 
   // @Delete(':id')

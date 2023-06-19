@@ -30,3 +30,14 @@ export const updateUserSchema = Joi.object({
     .optional()
     .valid(...Object.values(USER_CONFIG.GENDER)),
 });
+
+export const changePasswordSchema = Joi.object({
+  oldPassword: Joi.string()
+    .required()
+    .min(USER_CONFIG.PASSWORD.MIN)
+    .max(USER_CONFIG.PASSWORD.MAX),
+  newPassword: Joi.string()
+    .required()
+    .min(USER_CONFIG.PASSWORD.MIN)
+    .max(USER_CONFIG.PASSWORD.MAX),
+});
