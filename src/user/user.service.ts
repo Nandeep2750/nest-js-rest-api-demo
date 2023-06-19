@@ -18,6 +18,7 @@ import {
 import { User, UserDocument } from './entities/user.entity';
 import { ACCOUNT_TYPE, USER_CONFIG } from 'src/config/constants';
 import { AuthService } from 'src/auth/auth.service';
+import { MESSAGE } from 'src/config/message';
 
 @Injectable()
 export class UserService {
@@ -32,9 +33,7 @@ export class UserService {
     });
 
     if (user) {
-      throw new ConflictException(
-        'Email already exists please use another one.',
-      );
+      throw new ConflictException(MESSAGE.ERROR.EMAIL_ALREADY_EXISTS);
     }
 
     createUserDto.password = await hash(
@@ -44,7 +43,7 @@ export class UserService {
     const newUser = await new this.userModal(createUserDto).save();
     return {
       statusCode: StatusCodes.CREATED,
-      message: 'User registerd successfully.',
+      message: MESSAGE.SUCCESS.USER_REGISTRATION_SUCCESS,
       data: newUser,
     };
   }
@@ -63,12 +62,12 @@ export class UserService {
       ])) as UserDocument & { token: string };
 
     if (!user) {
-      throw new ForbiddenException('Please check Credentials.');
+      throw new ForbiddenException(MESSAGE.ERROR.INVALID_LOGIN_CREDENTIALS);
     }
 
     const isPasswordValid = await compare(loginUserDto.password, user.password);
     if (!isPasswordValid) {
-      throw new ForbiddenException('Please check Credentials.');
+      throw new ForbiddenException(MESSAGE.ERROR.INVALID_LOGIN_CREDENTIALS);
     }
     user = user.toObject();
     delete user.password;
@@ -81,7 +80,7 @@ export class UserService {
 
     return {
       statusCode: StatusCodes.OK,
-      message: 'User loggedin successfully.',
+      message: MESSAGE.SUCCESS.USER_LOGIN_SUCCESS,
       data: user,
     };
   }
@@ -104,9 +103,7 @@ export class UserService {
         _id: { $ne: userId },
       });
       if (user) {
-        throw new ConflictException(
-          'Email already used by other user please use another one.',
-        );
+        throw new ConflictException(MESSAGE.ERROR.EMAIL_ALREADY_EXISTS);
       }
     }
 
@@ -124,7 +121,7 @@ export class UserService {
         if (result) {
           return {
             statusCode: StatusCodes.OK,
-            message: 'Profile updated successfully.',
+            message: MESSAGE.SUCCESS.PROFILE_UPDATED_SUCCESS,
             data: result,
           };
         } else {
@@ -138,9 +135,7 @@ export class UserService {
     changePasswordDto: ChangePasswordDto,
   ) {
     if (changePasswordDto.oldPassword === changePasswordDto.newPassword) {
-      throw new ForbiddenException(
-        'The old password and the new password should not be the same.',
-      );
+      throw new ForbiddenException(MESSAGE.ERROR.PASSWORDS_SHOULD_NOT_MATCH);
     }
     return this.userModal
       .findById(new Types.ObjectId(userId))
@@ -160,7 +155,7 @@ export class UserService {
             user.password,
           );
           if (!isPasswordValid) {
-            throw new ForbiddenException('Old password is not valid.');
+            throw new ForbiddenException(MESSAGE.ERROR.OLD_PASSWORD_NOT_VALID);
           }
           user.password = await hash(
             changePasswordDto.newPassword,
@@ -169,10 +164,10 @@ export class UserService {
           await user.save();
           return {
             statusCode: StatusCodes.OK,
-            message: 'Password changed successfully.',
+            message: MESSAGE.SUCCESS.PASSWORD_CHANGED_SUCCESS,
           };
         } else {
-          throw new NotFoundException('No user available for given user Id.');
+          throw new NotFoundException(MESSAGE.ERROR.NO_USER_FOR_ID);
         }
       });
   }
