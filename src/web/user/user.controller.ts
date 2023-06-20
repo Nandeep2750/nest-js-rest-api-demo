@@ -55,7 +55,7 @@ export class UserController {
 
   @Patch('update')
   @HttpCode(StatusCodes.OK)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('web-jwt-strategy'))
   @UsePipes(new JoiValidationPipe(updateUserSchema))
   update(
     @Request() req: Express.Request,
@@ -67,7 +67,7 @@ export class UserController {
 
   @Patch('change-password')
   @HttpCode(StatusCodes.OK)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('web-jwt-strategy'))
   @UsePipes(new JoiValidationPipe(changePasswordSchema))
   changePassword(
     @Request() req: Express.Request,

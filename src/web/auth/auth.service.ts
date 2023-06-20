@@ -6,13 +6,6 @@ import { UserAuthDto } from './dto/auth.dto';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
   generateToken(userAuthDto: UserAuthDto) {
     return this.jwtService.sign(userAuthDto);
   }
