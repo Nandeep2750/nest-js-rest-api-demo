@@ -14,11 +14,11 @@ import {
   CreateUserDto,
   LoginUserDto,
   UpdateUserDto,
-} from './dto/user.dto';
-import { User, UserDocument } from './entities/user.entity';
+} from '../dtos/user.dto';
+import { User, UserDocument } from '../entities/user.entity';
 import { ACCOUNT_TYPE, USER_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class UserService {
