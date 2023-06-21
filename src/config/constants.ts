@@ -27,6 +27,13 @@ export const ADMIN_CONFIG = Object.freeze({
   TOKEN_EXPIRES_IN: '1h',
 });
 
+export const CATEGORY_CONFIG = {
+  STATUS_TYPE: {
+    ACTIVE: 'Active',
+    INACTIVE: 'Inactive',
+  },
+};
+
 export const ACCOUNT_TYPE = Object.freeze({
   USER: 'User',
   ADMIN: 'Admin',
