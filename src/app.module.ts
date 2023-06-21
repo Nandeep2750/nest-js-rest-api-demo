@@ -3,10 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
-import { UserModule } from './modules/web/user.module';
 import { RoutingModule } from './modules/routing.module';
-import { AdminModule } from './modules/cms/admin.module';
-import { CategoryModule } from './modules/cms/category.module';
+import { WebModule } from './modules/web.module';
+import { CmsModule } from './modules/cms.module';
 
 @Module({
   imports: [
@@ -20,10 +19,9 @@ import { CategoryModule } from './modules/cms/category.module';
       }),
       inject: [ConfigService],
     }),
+    WebModule,
+    CmsModule,
     RoutingModule,
-    UserModule,
-    AdminModule,
-    CategoryModule,
   ],
   controllers: [AppController],
   providers: [],
