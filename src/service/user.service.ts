@@ -18,13 +18,13 @@ import {
 import { User, UserDocument } from '../entities/user.entity';
 import { ACCOUNT_TYPE, USER_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
-import { AuthService } from './auth.service';
+import { WebAuthService } from './web-auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModal: Model<UserDocument>,
-    private authService: AuthService,
+    private webAuthService: WebAuthService,
   ) {}
 
   async register(createUserDto: CreateUserDto) {
@@ -72,7 +72,7 @@ export class UserService {
     user = user.toObject();
     delete user.password;
 
-    user.token = await this.authService.generateToken({
+    user.token = await this.webAuthService.generateToken({
       _id: user._id,
       email: user.email,
       accountType: ACCOUNT_TYPE.USER,
@@ -115,7 +115,7 @@ export class UserService {
         },
         { new: true },
       )
-      .select(['firstName', 'lastName', 'email', 'type', 'refreshToken'])
+      .select(['firstName', 'lastName', 'email'])
       .exec()
       .then((result) => {
         if (result) {
@@ -139,14 +139,7 @@ export class UserService {
     }
     return this.userModal
       .findById(new Types.ObjectId(userId))
-      .select([
-        'firstName',
-        'lastName',
-        'email',
-        'password',
-        'type',
-        'refreshToken',
-      ])
+      .select(['firstName', 'lastName', 'email', 'password'])
       .exec()
       .then(async (user) => {
         if (user) {

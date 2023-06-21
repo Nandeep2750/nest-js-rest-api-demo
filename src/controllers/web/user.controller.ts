@@ -8,19 +8,19 @@ import {
   HttpCode,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from '../service/user.service';
+import { UserService } from '../../service/user.service';
 import {
   ChangePasswordDto,
   CreateUserDto,
   LoginUserDto,
   UpdateUserDto,
-} from '../dtos/user.dto';
+} from '../../dtos/user.dto';
 import {
   changePasswordSchema,
   createUserSchema,
   loginUserSchema,
   updateUserSchema,
-} from '../schema/user.schema';
+} from '../../schema/user.schema';
 import { JoiValidationPipe } from 'src/pipes/joi-validation.pipe';
 import { StatusCodes } from 'http-status-codes';
 import { AuthGuard } from '@nestjs/passport';

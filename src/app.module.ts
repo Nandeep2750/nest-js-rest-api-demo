@@ -3,8 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
-import { UserModule } from './web/modules/user.module';
-import { RoutingModule } from './routing.module';
+import { UserModule } from './modules/user.module';
+import { RoutingModule } from './modules/routing.module';
+import { AdminModule } from './modules/admin.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RoutingModule } from './routing.module';
     }),
     RoutingModule,
     UserModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [],

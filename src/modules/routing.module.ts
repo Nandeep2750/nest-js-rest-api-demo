@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { WEB_ROUTES } from './web/web.routes';
+import { WEB_ROUTES } from '../routes/web.routes';
+import { CMS_ROUTES } from '../routes/cms.routes';
 
-const ROUTES = [...WEB_ROUTES];
+const ROUTES = [...WEB_ROUTES, ...CMS_ROUTES];
 
 @Module({
   imports: [RouterModule.register(ROUTES)],
