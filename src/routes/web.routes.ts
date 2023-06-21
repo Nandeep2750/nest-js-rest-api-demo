@@ -1,5 +1,5 @@
 import { Routes } from '@nestjs/core';
-import { UserModule } from '../modules/user.module';
+import { UserModule } from '../modules/web/user.module';
 
 export const WEB_ROUTES: Routes = [
   {

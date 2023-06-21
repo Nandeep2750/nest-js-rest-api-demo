@@ -1,5 +1,5 @@
 import { Routes } from '@nestjs/core';
-import { AdminModule } from '../modules/admin.module';
+import { AdminModule } from '../modules/cms/admin.module';
 
 export const CMS_ROUTES: Routes = [
   {

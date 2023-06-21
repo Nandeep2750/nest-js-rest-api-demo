@@ -3,9 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
-import { UserModule } from './modules/user.module';
+import { UserModule } from './modules/web/user.module';
 import { RoutingModule } from './modules/routing.module';
-import { AdminModule } from './modules/admin.module';
+import { AdminModule } from './modules/cms/admin.module';
 
 @Module({
   imports: [

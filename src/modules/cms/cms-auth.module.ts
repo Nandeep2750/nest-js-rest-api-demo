@@ -3,8 +3,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { ADMIN_CONFIG } from 'src/config/constants';
-import { CmsAuthService } from '../service/cms-auth.service';
-import { CmsJwtStrategy } from '../strategies/cms-jwt.strategy';
+import { CmsAuthService } from '../../service/cms-auth.service';
+import { CmsJwtStrategy } from '../../strategies/cms-jwt.strategy';
 
 @Module({
   imports: [
