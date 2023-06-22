@@ -24,7 +24,7 @@ export const ADMIN_CONFIG = Object.freeze({
   },
   SALT_ROUNDS: 10,
   JWT_KEY: 'auth.secret.admin',
-  TOKEN_EXPIRES_IN: '1h',
+  TOKEN_EXPIRES_IN: '1d',
 });
 
 export const CATEGORY_CONFIG = {

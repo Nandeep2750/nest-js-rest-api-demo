@@ -6,8 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  UsePipes,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { StatusCodes } from 'http-status-codes';
+
 import { CreateCategoryDto, UpdateCategoryDto } from 'src/dtos/category.dto';
+import { JoiValidationPipe } from 'src/pipes/joi-validation.pipe';
+import { createCategorySchema } from 'src/schema/category.schema';
 import { CategoryService } from 'src/service/category.service';
 
 @Controller('category')
@@ -15,6 +23,9 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post('add')
+  @HttpCode(StatusCodes.CREATED)
+  @UseGuards(AuthGuard('cms-jwt-strategy'))
+  @UsePipes(new JoiValidationPipe(createCategorySchema))
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
