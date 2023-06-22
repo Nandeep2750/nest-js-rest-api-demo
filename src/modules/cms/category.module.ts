@@ -17,4 +17,8 @@ import { Category, CategorySchema } from 'src/entities/category.entity';
   controllers: [CategoryController],
   providers: [CategoryService, CmsAuthService],
 })
-export class CategoryModule {}
+export class CategoryModule {
+  // constructor() {
+  //   mongoose.plugin(mongoosePaginate);
+  // }
+}

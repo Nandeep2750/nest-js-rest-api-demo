@@ -30,7 +30,9 @@ export class CategoryController {
     return this.categoryService.create(createCategoryDto);
   }
 
-  @Get()
+  @Get('list')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('cms-jwt-strategy'))
   findAll() {
     return this.categoryService.findAll();
   }

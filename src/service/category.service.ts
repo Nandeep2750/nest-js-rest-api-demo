@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StatusCodes } from 'http-status-codes';
-import { Model } from 'mongoose';
+import { PaginateModel } from 'mongoose';
 import { CATEGORY_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
 import { CreateCategoryDto, UpdateCategoryDto } from 'src/dtos/category.dto';
@@ -10,7 +10,8 @@ import { Category, CategoryDocument } from 'src/entities/category.entity';
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectModel(Category.name) private categoryModal: Model<CategoryDocument>,
+    @InjectModel(Category.name)
+    private categoryModal: PaginateModel<CategoryDocument>,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
@@ -31,8 +32,15 @@ export class CategoryService {
     };
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll() {
+    const resData = await this.categoryModal
+      .find({ status: CATEGORY_CONFIG.STATUS_TYPE.ACTIVE })
+      .select(['name']);
+    return {
+      statusCode: StatusCodes.OK,
+      message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
+      data: resData,
+    };
   }
 
   findOne(id: number) {
