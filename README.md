@@ -57,6 +57,23 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+## Implemented Features
+
+- Modules Structure using Nest JS
+- Standard folder structure for Nest JS
+- Implement `ConfigModule` for access environment variables.
+- Implement `MongooseModule` for connect MongoDB.
+- Implementation of authentication or authorization using `@nestjs/jwt`, `passport` & `passport-jwt`
+- Hashing password using `bcrypt`
+- Validation using `class-validator` `class-transformer`
+- Manage `RoutingModule` using `RouterModule.register` available in Nest JS.
+- Use `http-status-codes` for sending status code.
+- Implement validation using `joi`.
+- Implement Guards using `UseGuards`.
+- Implement multiple PassportModule & JwtModule.
+- Create PassportStrategy
+
+
 
 ## Support
 
