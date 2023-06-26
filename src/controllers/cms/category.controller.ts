@@ -52,9 +52,11 @@ export class CategoryController {
     return this.categoryService.findAllPaginate(categoryPaginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+  @Get(':categoryId')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('cms-jwt-strategy'))
+  findOne(@Param('categoryId') categoryId: string) {
+    return this.categoryService.findOne(categoryId);
   }
 
   @Patch('edit/:id')

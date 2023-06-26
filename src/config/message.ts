@@ -7,7 +7,8 @@ export const MESSAGE = Object.freeze({
     PROFILE_UPDATED_SUCCESS: 'Profile updated successfully.',
     PASSWORD_CHANGED_SUCCESS: 'Password changed successfully.',
     CATEGORY_CREATE_SUCCESS: 'Category created successfully.',
-    CATEGORY_FETCH_SUCCESS: 'Categories list fetched successfully.',
+    CATEGORY_LIST_FETCH_SUCCESS: 'Categories list fetched successfully.',
+    CATEGORY_FETCH_SUCCESS: 'Category fetched successfully.',
   },
   ERROR: {
     EMAIL_ALREADY_EXISTS: 'Email already used by other please use another one.',

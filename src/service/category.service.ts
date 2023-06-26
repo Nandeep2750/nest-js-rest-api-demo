@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StatusCodes } from 'http-status-codes';
-import { PaginateModel } from 'mongoose';
+import { PaginateModel, Types } from 'mongoose';
 import { CATEGORY_CONFIG, PAGINATION_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
 import {
@@ -42,7 +42,7 @@ export class CategoryService {
       .select(['name']);
     return {
       statusCode: StatusCodes.OK,
-      message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
+      message: MESSAGE.SUCCESS.CATEGORY_LIST_FETCH_SUCCESS,
       data: resData,
     };
   }
@@ -65,13 +65,22 @@ export class CategoryService {
     const resData = await this.categoryModal.paginate(query, options);
     return {
       statusCode: StatusCodes.OK,
-      message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
+      message: MESSAGE.SUCCESS.CATEGORY_LIST_FETCH_SUCCESS,
       data: resData,
     };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(categoryId: string) {
+    const resData = await this.categoryModal
+      .findOne({
+        _id: new Types.ObjectId(categoryId),
+      })
+      .select(['name', 'status']);
+    return {
+      statusCode: StatusCodes.OK,
+      message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
+      data: resData,
+    };
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
