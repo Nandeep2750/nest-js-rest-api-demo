@@ -6,6 +6,7 @@ export const MESSAGE = Object.freeze({
     USER_LOGIN_SUCCESS: 'User logged in successfully.',
     PROFILE_UPDATED_SUCCESS: 'Profile updated successfully.',
     CATEGORY_UPDATED_SUCCESS: 'Category updated successfully.',
+    CATEGORY_DELETE_SUCCESS: 'Category deleted successfully.',
     PASSWORD_CHANGED_SUCCESS: 'Password changed successfully.',
     CATEGORY_CREATE_SUCCESS: 'Category created successfully.',
     CATEGORY_LIST_FETCH_SUCCESS: 'Categories list fetched successfully.',

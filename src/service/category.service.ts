@@ -55,7 +55,6 @@ export class CategoryService {
     const query: any = {
       name: { $regex: categoryPaginationDto.search, $options: 'i' },
     };
-
     if (categoryPaginationDto.status) {
       query.status = categoryPaginationDto.status;
     }
@@ -65,7 +64,6 @@ export class CategoryService {
       limit: categoryPaginationDto.limit || PAGINATION_CONFIG.LIMIT,
       select: ['name', 'status'],
     };
-
     const resData = await this.categoryModal.paginate(query, options);
     return {
       statusCode: StatusCodes.OK,
@@ -115,7 +113,26 @@ export class CategoryService {
       });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(categoryId: string) {
+    return `This action removes a #${categoryId} category`;
+
+    // const category = await this.categoryModal.findOne({
+    //   _id: new Types.ObjectId(categoryId),
+    // });
+
+    // if (!category) {
+    //   throw new NotFoundException();
+    // }
+
+    // return this.categoryModal.deleteById(categoryId).then((result) => {
+    //   if (result) {
+    //     return {
+    //       statusCode: StatusCodes.OK,
+    //       message: MESSAGE.SUCCESS.CATEGORY_DELETE_SUCCESS,
+    //     };
+    //   } else {
+    //     throw new NotFoundException();
+    //   }
+    // });
   }
 }

@@ -72,8 +72,8 @@ export class CategoryController {
     return this.categoryService.update(categoryId, updateCategoryDto);
   }
 
-  @Delete('delete/:id')
-  remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+  @Delete('delete/:categoryId')
+  remove(@Param('categoryId') categoryId: string) {
+    return this.categoryService.remove(categoryId);
   }
 }

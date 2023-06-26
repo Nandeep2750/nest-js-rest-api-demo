@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import * as mongoosePaginate from 'mongoose-paginate-v2';
+import * as mongooseDelete from 'mongoose-delete';
 
 export type AdminDocument = HydratedDocument<Admin>;
 
@@ -25,3 +27,8 @@ export class Admin {
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);
+AdminSchema.plugin(mongoosePaginate);
+AdminSchema.plugin(mongooseDelete, {
+  deletedAt: true,
+  overrideMethods: true,
+});

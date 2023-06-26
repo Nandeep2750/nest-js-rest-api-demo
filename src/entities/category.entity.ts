@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoosePaginate from 'mongoose-paginate-v2';
+import * as mongooseDelete from 'mongoose-delete';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
@@ -16,3 +17,7 @@ export class Category {
 export const CategorySchema = SchemaFactory.createForClass(Category);
 
 CategorySchema.plugin(mongoosePaginate);
+CategorySchema.plugin(mongooseDelete, {
+  deletedAt: true,
+  overrideMethods: true,
+});
