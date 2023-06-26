@@ -6,9 +6,9 @@ export const createCategorySchema = Joi.object({
 });
 
 export const updateCategorySchema = Joi.object({
-  name: Joi.string().required(),
+  name: Joi.string().optional(),
   status: Joi.string()
-    .required()
+    .optional()
     .valid(...Object.values(CATEGORY_CONFIG.STATUS_TYPE)),
 });
 

@@ -5,6 +5,7 @@ export const MESSAGE = Object.freeze({
     ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully.',
     USER_LOGIN_SUCCESS: 'User logged in successfully.',
     PROFILE_UPDATED_SUCCESS: 'Profile updated successfully.',
+    CATEGORY_UPDATED_SUCCESS: 'Category updated successfully.',
     PASSWORD_CHANGED_SUCCESS: 'Password changed successfully.',
     CATEGORY_CREATE_SUCCESS: 'Category created successfully.',
     CATEGORY_LIST_FETCH_SUCCESS: 'Categories list fetched successfully.',
@@ -20,5 +21,6 @@ export const MESSAGE = Object.freeze({
     NO_ADMIN_FOR_ID: 'No admin available for given admin ID.',
     CATEGORY_ALREADY_EXISTS:
       'Category name is already available, please try another one.',
+    CATEGORY_NOT_FOUND: 'Category not found.',
   },
 });

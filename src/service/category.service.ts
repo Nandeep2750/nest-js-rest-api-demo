@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StatusCodes } from 'http-status-codes';
 import { PaginateModel, Types } from 'mongoose';
@@ -70,21 +74,45 @@ export class CategoryService {
     };
   }
 
-  async findOne(categoryId: string) {
-    const resData = await this.categoryModal
+  async findOne(categoryId: Types.ObjectId) {
+    const category = await this.categoryModal
       .findOne({
         _id: new Types.ObjectId(categoryId),
       })
       .select(['name', 'status']);
+
+    if (!category) {
+      throw new NotFoundException();
+    }
     return {
       statusCode: StatusCodes.OK,
       message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
-      data: resData,
+      data: category,
     };
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  update(categoryId: string, updateCategoryDto: UpdateCategoryDto) {
+    return this.categoryModal
+      .findByIdAndUpdate(
+        new Types.ObjectId(categoryId),
+        {
+          ...updateCategoryDto,
+        },
+        { new: true },
+      )
+      .select(['name', 'status'])
+      .exec()
+      .then((result) => {
+        if (result) {
+          return {
+            statusCode: StatusCodes.OK,
+            message: MESSAGE.SUCCESS.CATEGORY_UPDATED_SUCCESS,
+            data: result,
+          };
+        } else {
+          throw new NotFoundException(MESSAGE.ERROR.CATEGORY_NOT_FOUND);
+        }
+      });
   }
 
   remove(id: number) {

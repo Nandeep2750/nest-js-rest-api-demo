@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes } from 'http-status-codes';
+import { Types } from 'mongoose';
 
 import {
   CategoryPaginationDto,
@@ -22,6 +23,7 @@ import { JoiValidationPipe } from 'src/pipes/joi-validation.pipe';
 import {
   createCategorySchema,
   listPaginateCategorySchema,
+  updateCategorySchema,
 } from 'src/schema/category.schema';
 import { CategoryService } from 'src/service/category.service';
 
@@ -55,16 +57,19 @@ export class CategoryController {
   @Get(':categoryId')
   @HttpCode(StatusCodes.OK)
   @UseGuards(AuthGuard('cms-jwt-strategy'))
-  findOne(@Param('categoryId') categoryId: string) {
+  findOne(@Param('categoryId') categoryId: Types.ObjectId) {
     return this.categoryService.findOne(categoryId);
   }
 
-  @Patch('edit/:id')
+  @Patch('edit/:categoryId')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('cms-jwt-strategy'))
   update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Param('categoryId') categoryId: string,
+    @Body(new JoiValidationPipe(updateCategorySchema))
+    updateCategoryDto: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(categoryId, updateCategoryDto);
   }
 
   @Delete('delete/:id')

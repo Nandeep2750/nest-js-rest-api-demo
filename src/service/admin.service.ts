@@ -126,7 +126,7 @@ export class AdminService {
             data: result,
           };
         } else {
-          throw new NotFoundException('No admin available for given admin Id.');
+          throw new NotFoundException(MESSAGE.ERROR.NO_ADMIN_FOR_ID);
         }
       });
   }
