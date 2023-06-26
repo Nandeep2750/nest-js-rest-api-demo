@@ -11,3 +11,13 @@ export const updateCategorySchema = Joi.object({
     .required()
     .valid(...Object.values(CATEGORY_CONFIG.STATUS_TYPE)),
 });
+
+export const listPaginateCategorySchema = Joi.object({
+  page: Joi.number().required(),
+  limit: Joi.number().required(),
+  status: Joi.string()
+    .optional()
+    .allow(null, '')
+    .valid(...Object.values(CATEGORY_CONFIG.STATUS_TYPE)),
+  search: Joi.string().optional().allow(null, ''),
+});

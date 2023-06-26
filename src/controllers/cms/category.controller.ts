@@ -13,9 +13,16 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes } from 'http-status-codes';
 
-import { CreateCategoryDto, UpdateCategoryDto } from 'src/dtos/category.dto';
+import {
+  CategoryPaginationDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from 'src/dtos/category.dto';
 import { JoiValidationPipe } from 'src/pipes/joi-validation.pipe';
-import { createCategorySchema } from 'src/schema/category.schema';
+import {
+  createCategorySchema,
+  listPaginateCategorySchema,
+} from 'src/schema/category.schema';
 import { CategoryService } from 'src/service/category.service';
 
 @Controller('category')
@@ -35,6 +42,14 @@ export class CategoryController {
   @UseGuards(AuthGuard('cms-jwt-strategy'))
   findAll() {
     return this.categoryService.findAll();
+  }
+
+  @Post('paginate-list')
+  @HttpCode(StatusCodes.OK)
+  @UseGuards(AuthGuard('cms-jwt-strategy'))
+  @UsePipes(new JoiValidationPipe(listPaginateCategorySchema))
+  findAllPaginate(@Body() categoryPaginationDto: CategoryPaginationDto) {
+    return this.categoryService.findAllPaginate(categoryPaginationDto);
   }
 
   @Get(':id')

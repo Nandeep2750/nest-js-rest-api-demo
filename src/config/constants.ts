@@ -38,3 +38,8 @@ export const ACCOUNT_TYPE = Object.freeze({
   USER: 'User',
   ADMIN: 'Admin',
 });
+
+export const PAGINATION_CONFIG = Object.freeze({
+  PAGE: 1,
+  LIMIT: 10,
+});

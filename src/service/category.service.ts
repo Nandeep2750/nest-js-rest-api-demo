@@ -2,9 +2,13 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StatusCodes } from 'http-status-codes';
 import { PaginateModel } from 'mongoose';
-import { CATEGORY_CONFIG } from 'src/config/constants';
+import { CATEGORY_CONFIG, PAGINATION_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
-import { CreateCategoryDto, UpdateCategoryDto } from 'src/dtos/category.dto';
+import {
+  CategoryPaginationDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from 'src/dtos/category.dto';
 import { Category, CategoryDocument } from 'src/entities/category.entity';
 
 @Injectable()
@@ -36,6 +40,29 @@ export class CategoryService {
     const resData = await this.categoryModal
       .find({ status: CATEGORY_CONFIG.STATUS_TYPE.ACTIVE })
       .select(['name']);
+    return {
+      statusCode: StatusCodes.OK,
+      message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
+      data: resData,
+    };
+  }
+
+  async findAllPaginate(categoryPaginationDto: CategoryPaginationDto) {
+    const query: any = {
+      name: { $regex: categoryPaginationDto.search, $options: 'i' },
+    };
+
+    if (categoryPaginationDto.status) {
+      query.status = categoryPaginationDto.status;
+    }
+    const options = {
+      sort: { createdAt: -1 },
+      page: categoryPaginationDto.page || PAGINATION_CONFIG.PAGE,
+      limit: categoryPaginationDto.limit || PAGINATION_CONFIG.LIMIT,
+      select: ['name', 'status'],
+    };
+
+    const resData = await this.categoryModal.paginate(query, options);
     return {
       statusCode: StatusCodes.OK,
       message: MESSAGE.SUCCESS.CATEGORY_FETCH_SUCCESS,
