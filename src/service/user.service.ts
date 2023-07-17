@@ -23,12 +23,12 @@ import { WebAuthService } from './web-auth.service';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModal: Model<UserDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private webAuthService: WebAuthService,
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    const user = await this.userModal.findOne({
+    const user = await this.userModel.findOne({
       email: createUserDto.email,
     });
 
@@ -40,7 +40,7 @@ export class UserService {
       createUserDto.password,
       USER_CONFIG.SALT_ROUNDS,
     );
-    const newUser = await new this.userModal(createUserDto).save();
+    const newUser = await new this.userModel(createUserDto).save();
     return {
       statusCode: StatusCodes.CREATED,
       message: MESSAGE.SUCCESS.USER_REGISTRATION_SUCCESS,
@@ -49,7 +49,7 @@ export class UserService {
   }
 
   async login(loginUserDto: LoginUserDto) {
-    let user = (await this.userModal
+    let user = (await this.userModel
       .findOne({
         email: loginUserDto.email,
       })
@@ -98,7 +98,7 @@ export class UserService {
     updateUserDto: UpdateUserDto,
   ) {
     if (updateUserDto.email) {
-      const user = await this.userModal.findOne({
+      const user = await this.userModel.findOne({
         email: updateUserDto.email,
         _id: { $ne: userId },
       });
@@ -107,7 +107,7 @@ export class UserService {
       }
     }
 
-    return this.userModal
+    return this.userModel
       .findByIdAndUpdate(
         new Types.ObjectId(userId),
         {
@@ -137,7 +137,7 @@ export class UserService {
     if (changePasswordDto.oldPassword === changePasswordDto.newPassword) {
       throw new ForbiddenException(MESSAGE.ERROR.PASSWORDS_SHOULD_NOT_MATCH);
     }
-    return this.userModal
+    return this.userModel
       .findById(new Types.ObjectId(userId))
       .select(['firstName', 'lastName', 'email', 'password'])
       .exec()

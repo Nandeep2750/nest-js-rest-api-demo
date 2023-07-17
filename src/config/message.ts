@@ -5,12 +5,16 @@ export const MESSAGE = Object.freeze({
     ADMIN_LOGIN_SUCCESS: 'Admin logged in successfully.',
     USER_LOGIN_SUCCESS: 'User logged in successfully.',
     PROFILE_UPDATED_SUCCESS: 'Profile updated successfully.',
+    PASSWORD_CHANGED_SUCCESS: 'Password changed successfully.',
     CATEGORY_UPDATED_SUCCESS: 'Category updated successfully.',
     CATEGORY_DELETE_SUCCESS: 'Category deleted successfully.',
-    PASSWORD_CHANGED_SUCCESS: 'Password changed successfully.',
     CATEGORY_CREATE_SUCCESS: 'Category created successfully.',
     CATEGORY_LIST_FETCH_SUCCESS: 'Categories list fetched successfully.',
     CATEGORY_FETCH_SUCCESS: 'Category fetched successfully.',
+    PRODUCT_CREATE_SUCCESS: 'Product created successfully.',
+    PRODUCT_LIST_FETCH_SUCCESS: 'Product list fetched successfully.',
+    PRODUCT_FETCH_SUCCESS: 'Product fetched successfully.',
+    PRODUCT_UPDATED_SUCCESS: 'Category updated successfully.',
   },
   ERROR: {
     EMAIL_ALREADY_EXISTS: 'Email already used by other please use another one.',
@@ -23,5 +27,6 @@ export const MESSAGE = Object.freeze({
     CATEGORY_ALREADY_EXISTS:
       'Category name is already available, please try another one.',
     CATEGORY_NOT_FOUND: 'Category not found.',
+    PRODUCT_NOT_FOUND: 'Product not found.',
   },
 });

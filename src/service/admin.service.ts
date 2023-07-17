@@ -23,12 +23,12 @@ import { CmsAuthService } from './cms-auth.service';
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectModel(Admin.name) private adminModal: Model<AdminDocument>,
+    @InjectModel(Admin.name) private adminModel: Model<AdminDocument>,
     private cmsAuthService: CmsAuthService,
   ) {}
 
   async register(createAdminDto: CreateAdminDto) {
-    const admin = await this.adminModal.findOne({
+    const admin = await this.adminModel.findOne({
       email: createAdminDto.email,
     });
 
@@ -40,7 +40,7 @@ export class AdminService {
       createAdminDto.password,
       ADMIN_CONFIG.SALT_ROUNDS,
     );
-    await new this.adminModal(createAdminDto).save();
+    await new this.adminModel(createAdminDto).save();
     return {
       statusCode: StatusCodes.CREATED,
       message: MESSAGE.SUCCESS.ADMIN_REGISTRATION_SUCCESS,
@@ -48,7 +48,7 @@ export class AdminService {
   }
 
   async login(loginAdminDto: LoginAdminDto) {
-    let admin = (await this.adminModal
+    let admin = (await this.adminModel
       .findOne({
         email: loginAdminDto.email,
       })
@@ -99,7 +99,7 @@ export class AdminService {
     updateAdminDto: UpdateAdminDto,
   ) {
     if (updateAdminDto.email) {
-      const admin = await this.adminModal.findOne({
+      const admin = await this.adminModel.findOne({
         email: updateAdminDto.email,
         _id: { $ne: adminId },
       });
@@ -108,7 +108,7 @@ export class AdminService {
       }
     }
 
-    return this.adminModal
+    return this.adminModel
       .findByIdAndUpdate(
         new Types.ObjectId(adminId),
         {
@@ -138,7 +138,7 @@ export class AdminService {
     if (changePasswordDto.oldPassword === changePasswordDto.newPassword) {
       throw new ForbiddenException(MESSAGE.ERROR.PASSWORDS_SHOULD_NOT_MATCH);
     }
-    return this.adminModal
+    return this.adminModel
       .findById(new Types.ObjectId(adminId))
       .select(['firstName', 'lastName', 'email', 'password'])
       .exec()

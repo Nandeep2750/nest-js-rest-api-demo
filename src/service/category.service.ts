@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { StatusCodes } from 'http-status-codes';
-import { PaginateModel, Types } from 'mongoose';
+import { PaginateModel, PaginateOptions, Types } from 'mongoose';
 import { CATEGORY_CONFIG, PAGINATION_CONFIG } from 'src/config/constants';
 import { MESSAGE } from 'src/config/message';
 import {
@@ -19,11 +19,11 @@ import { Category, CategoryDocument } from 'src/entities/category.entity';
 export class CategoryService {
   constructor(
     @InjectModel(Category.name)
-    private categoryModal: PaginateModel<CategoryDocument>,
+    private categoryModel: PaginateModel<CategoryDocument>,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    const category = await this.categoryModal.findOne({
+    const category = await this.categoryModel.findOne({
       name: createCategoryDto.name,
     });
 
@@ -33,7 +33,7 @@ export class CategoryService {
 
     createCategoryDto.status = CATEGORY_CONFIG.STATUS_TYPE.ACTIVE;
 
-    await new this.categoryModal(createCategoryDto).save();
+    await new this.categoryModel(createCategoryDto).save();
     return {
       statusCode: StatusCodes.CREATED,
       message: MESSAGE.SUCCESS.CATEGORY_CREATE_SUCCESS,
@@ -41,7 +41,7 @@ export class CategoryService {
   }
 
   async findAll() {
-    const resData = await this.categoryModal
+    const resData = await this.categoryModel
       .find({ status: CATEGORY_CONFIG.STATUS_TYPE.ACTIVE })
       .select(['name']);
     return {
@@ -58,13 +58,13 @@ export class CategoryService {
     if (categoryPaginationDto.status) {
       query.status = categoryPaginationDto.status;
     }
-    const options = {
+    const options: PaginateOptions = {
       sort: { createdAt: -1 },
       page: categoryPaginationDto.page || PAGINATION_CONFIG.PAGE,
       limit: categoryPaginationDto.limit || PAGINATION_CONFIG.LIMIT,
       select: ['name', 'status'],
     };
-    const resData = await this.categoryModal.paginate(query, options);
+    const resData = await this.categoryModel.paginate(query, options);
     return {
       statusCode: StatusCodes.OK,
       message: MESSAGE.SUCCESS.CATEGORY_LIST_FETCH_SUCCESS,
@@ -73,14 +73,14 @@ export class CategoryService {
   }
 
   async findOne(categoryId: Types.ObjectId) {
-    const category = await this.categoryModal
+    const category = await this.categoryModel
       .findOne({
         _id: new Types.ObjectId(categoryId),
       })
       .select(['name', 'status']);
 
     if (!category) {
-      throw new NotFoundException();
+      throw new NotFoundException(MESSAGE.ERROR.CATEGORY_NOT_FOUND);
     }
     return {
       statusCode: StatusCodes.OK,
@@ -90,7 +90,7 @@ export class CategoryService {
   }
 
   update(categoryId: string, updateCategoryDto: UpdateCategoryDto) {
-    return this.categoryModal
+    return this.categoryModel
       .findByIdAndUpdate(
         new Types.ObjectId(categoryId),
         {
@@ -116,7 +116,7 @@ export class CategoryService {
   async remove(categoryId: string) {
     return `This action removes a #${categoryId} category`;
 
-    // const category = await this.categoryModal.findOne({
+    // const category = await this.categoryModel.findOne({
     //   _id: new Types.ObjectId(categoryId),
     // });
 
@@ -124,7 +124,7 @@ export class CategoryService {
     //   throw new NotFoundException();
     // }
 
-    // return this.categoryModal.deleteById(categoryId).then((result) => {
+    // return this.categoryModel.deleteById(categoryId).then((result) => {
     //   if (result) {
     //     return {
     //       statusCode: StatusCodes.OK,

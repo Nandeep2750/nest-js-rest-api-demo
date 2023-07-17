@@ -16,6 +16,7 @@ import { Category, CategorySchema } from 'src/entities/category.entity';
   ],
   controllers: [CategoryController],
   providers: [CategoryService, CmsAuthService],
+  exports: [CategoryService],
 })
 export class CategoryModule {
   // constructor() {
